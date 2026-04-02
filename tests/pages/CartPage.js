@@ -20,6 +20,10 @@ class CartPage {
   removeButton(productId) {
     return this.page.getByTestId(`cart-remove-${productId}`);
   }
+
+  continueShopping() {
+    return this.page.getByRole('link', { name: 'Continue shopping' });
+  }
 }
 
 module.exports = { CartPage };
