@@ -57,10 +57,10 @@ export function ProductPage() {
         <button className="btn btnPrimary" onClick={add} data-testid="product-add">
           Add to cart
         </button>
-        <Link className="btn" to="/cart">
+        <Link className="btn" to="/cart" data-testid="product-go-cart">
           Go to cart
         </Link>
-        <Link className="btn" to="/catalog">
+        <Link className="btn" to="/catalog" data-testid="product-back">
           Back
         </Link>
       </div>
