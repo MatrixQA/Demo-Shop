@@ -1,9 +1,13 @@
-class LoginPage {
-  /**
-   * @param {import('@playwright/test').Page} page
-   */
-  constructor(page) {
-    this.page = page;
+import type { Locator, Page } from '@playwright/test';
+
+export class LoginPage {
+  readonly form: Locator;
+  readonly username: Locator;
+  readonly password: Locator;
+  readonly submit: Locator;
+  readonly error: Locator;
+
+  constructor(readonly page: Page) {
     this.form = page.getByTestId('login-form');
     this.username = page.getByTestId('login-username');
     this.password = page.getByTestId('login-password');
@@ -11,16 +15,13 @@ class LoginPage {
     this.error = page.getByTestId('login-error');
   }
 
-  async goto() {
+  async goto(): Promise<void> {
     await this.page.goto('/login');
   }
 
-  async login(username, password) {
+  async login(username: string, password: string): Promise<void> {
     await this.username.fill(username);
     await this.password.fill(password);
     await this.submit.click();
   }
 }
-
-module.exports = { LoginPage };
-

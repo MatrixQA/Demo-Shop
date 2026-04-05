@@ -1,6 +1,6 @@
-const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('../pages/LoginPage');
-const users = require('../fixtures/users');
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+import { users } from '../fixtures/users';
 
 test.describe('auth', () => {
   test('login success', async ({ page }) => {
@@ -55,4 +55,3 @@ test.describe('auth', () => {
     await expect(page.getByTestId('auth-user')).toBeHidden();
   });
 });
-
