@@ -1,5 +1,5 @@
-const { test, expect } = require('@playwright/test');
-const { CheckoutPage } = require('../pages/CheckoutPage');
+import { test, expect } from '@playwright/test';
+import { CheckoutPage } from '../pages/CheckoutPage';
 
 test.describe('checkout', () => {
   test('checkout validation (missing required fields)', async ({ page }) => {
@@ -31,4 +31,3 @@ test.describe('checkout', () => {
     await expect(page.getByTestId('nav-cart')).toContainText('(0)');
   });
 });
-

@@ -1,15 +1,18 @@
-const { test, expect } = require('@playwright/test');
-const { CatalogPage } = require('../pages/CatalogPage');
-const { CartPage } = require('../pages/CartPage');
-const { CheckoutPage } = require('../pages/CheckoutPage');
+import { test, expect } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { CatalogPage } from '../pages/CatalogPage';
+import { CartPage } from '../pages/CartPage';
+import { CheckoutPage } from '../pages/CheckoutPage';
 
-/** @param {import('@playwright/test').Page} page */
-async function visibleCatalogProductIds(page) {
+/** Product ids in default name (A→Z) order — matches `localeCompare` in CatalogPage.jsx. */
+const NAME_ASC_IDS = ['p-101', 'p-102', 'p-104', 'p-105', 'p-103', 'p-100'];
+
+async function visibleCatalogProductIds(page: Page): Promise<string[]> {
   return page
     .getByTestId('catalog-grid')
     .locator('[data-testid^="product-card-"]')
     .evaluateAll((els) =>
-      els.map((el) => el.getAttribute('data-testid').replace('product-card-', ''))
+      els.map((el) => (el as HTMLElement).getAttribute('data-testid')!.replace('product-card-', ''))
     );
 }
 
@@ -25,9 +28,36 @@ test.describe('catalog', () => {
         await expect(page.getByTestId('product-card-p-101')).toBeVisible();
         await expect(page.getByTestId('product-card-p-100')).toBeHidden();
       });
+
+      test('shows empty state when no products match the search', async ({ page }) => {
+        const catalog = new CatalogPage(page);
+        await catalog.goto();
+
+        await catalog.searchFor('zzz-no-such-product');
+
+        await expect(catalog.emptyState).toBeVisible();
+        await expect(catalog.emptyState).toContainText('No products match your filters.');
+        await expect(page.getByTestId('product-card-p-100')).toBeHidden();
+      });
     });
 
     test.describe('sort', () => {
+      test('default name A→Z orders products on first load', async ({ page }) => {
+        const catalog = new CatalogPage(page);
+        await catalog.goto();
+
+        await expect.poll(() => visibleCatalogProductIds(page)).toEqual(NAME_ASC_IDS);
+      });
+
+      test('name A→Z orders products when selected after another sort', async ({ page }) => {
+        const catalog = new CatalogPage(page);
+        await catalog.goto();
+        await catalog.sort.selectOption('price-asc');
+        await catalog.sort.selectOption('name-asc');
+
+        await expect.poll(() => visibleCatalogProductIds(page)).toEqual(NAME_ASC_IDS);
+      });
+
       test('price low to high orders products by ascending price', async ({ page }) => {
         const catalog = new CatalogPage(page);
         await catalog.goto();
@@ -73,6 +103,27 @@ test.describe('catalog', () => {
         await expect(page.getByTestId('product-card-p-101')).toBeVisible();
         await expect(page.getByTestId('product-card-p-105')).toBeVisible();
         await expect(page.getByTestId('product-card-p-100')).toBeHidden();
+      });
+
+      test('combined category and search can yield no results', async ({ page }) => {
+        const catalog = new CatalogPage(page);
+        await catalog.goto();
+
+        await catalog.category.selectOption('Books');
+        await catalog.searchFor('Keyboard');
+
+        await expect(catalog.emptyState).toBeVisible();
+        await expect(page.getByTestId('product-card-p-100')).toBeHidden();
+      });
+    });
+
+    test.describe('product cards', () => {
+      test('shows formatted price on each visible card', async ({ page }) => {
+        const catalog = new CatalogPage(page);
+        await catalog.goto();
+
+        await expect(catalog.productPrice('p-100')).toHaveText('$19.99');
+        await expect(catalog.productPrice('p-101')).toHaveText('$49.00');
       });
     });
   });
