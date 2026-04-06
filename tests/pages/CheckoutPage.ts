@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 
+/** Checkout route page object (see tests/e2e/checkout.spec.ts). */
 export class CheckoutPage {
   readonly form: Locator;
   readonly fullName: Locator;
@@ -21,6 +22,7 @@ export class CheckoutPage {
     this.error = page.getByTestId('checkout-error');
   }
 
+  /** Open the checkout page. */
   async goto(): Promise<void> {
     await this.page.goto('/checkout');
   }
