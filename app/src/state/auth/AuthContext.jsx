@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { users } from '../../data/users.js'
+import { authenticate } from './authStore.js'
 
 const AuthContext = createContext(null)
 
@@ -32,11 +32,9 @@ export function AuthProvider({ children }) {
 
   const value = useMemo(() => {
     function login(username, password) {
-      const found = users.find(
-        (u) => u.username === username && u.password === password,
-      )
-      if (!found) return { ok: false, error: 'Invalid credentials' }
-      setUser({ username: found.username, role: found.role })
+      const res = authenticate(username, password)
+      if (!res.ok) return res
+      setUser(res.user)
       return { ok: true }
     }
 
