@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../state/auth/AuthContext.jsx'
 import { useToast } from '../state/toast/ToastContext.jsx'
 
@@ -82,6 +82,13 @@ export function LoginPage() {
           Sign in
         </button>
       </form>
+
+      <div style={{ height: 14 }} />
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <Link to="/register">Create account</Link>
+        <span style={{ opacity: 0.5 }}>|</span>
+        <Link to="/forgot-password">Forgot password?</Link>
+      </div>
     </div>
   )
 }
