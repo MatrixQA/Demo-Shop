@@ -4,6 +4,10 @@ import { AppProviders } from './state/AppProviders.jsx'
 import { Layout } from './ui/Layout.jsx'
 import { HomePage } from './pages/HomePage.jsx'
 import { LoginPage } from './pages/LoginPage.jsx'
+import { RegisterPage } from './pages/RegisterPage.jsx'
+import { VerifyEmailPage } from './pages/VerifyEmailPage.jsx'
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage.jsx'
+import { ResetPasswordPage } from './pages/ResetPasswordPage.jsx'
 import { CatalogPage } from './pages/CatalogPage.jsx'
 import { ProductPage } from './pages/ProductPage.jsx'
 import { CartPage } from './pages/CartPage.jsx'
@@ -19,6 +23,10 @@ function App() {
           <Route element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/product/:productId" element={<ProductPage />} />
             <Route path="/cart" element={<CartPage />} />
