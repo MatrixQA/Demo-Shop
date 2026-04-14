@@ -37,7 +37,7 @@ export function RegisterPage() {
     <div className="card" style={{ maxWidth: 560, margin: '0 auto' }}>
       <h1 style={{ marginTop: 0 }}>Create account</h1>
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} data-testid="register-form">
         <div className="field">
           <label htmlFor="reg-username">Username</label>
           <input
@@ -46,6 +46,7 @@ export function RegisterPage() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
+            data-testid="register-username"
           />
         </div>
 
@@ -59,6 +60,7 @@ export function RegisterPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
+            data-testid="register-email"
           />
         </div>
 
@@ -73,13 +75,14 @@ export function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             autoComplete="new-password"
+            data-testid="register-password"
           />
         </div>
 
         {error ? (
           <>
             <div style={{ height: 10 }} />
-            <div className="error" role="alert">
+            <div className="error" role="alert" data-testid="register-error">
               {error}
             </div>
           </>
@@ -87,7 +90,7 @@ export function RegisterPage() {
 
         <div style={{ height: 16 }} />
 
-        <button className="btn btnPrimary" type="submit">
+        <button className="btn btnPrimary" type="submit" data-testid="register-submit">
           Register
         </button>
         <button className="btn" type="button" onClick={() => nav('/login')} style={{ marginLeft: 10 }}>
@@ -103,7 +106,7 @@ export function RegisterPage() {
             <div style={{ opacity: 0.9, marginBottom: 10 }}>
               In a real app we’d email you a verification link. For this demo, click:
             </div>
-            <Link to={verifyUrl} className="btn btnPrimary">
+            <Link to={verifyUrl} className="btn btnPrimary" data-testid="register-verify-email">
               Verify email
             </Link>
           </div>
