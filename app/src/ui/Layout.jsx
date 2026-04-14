@@ -50,15 +50,24 @@ export function Layout() {
               </button>
             </>
           ) : (
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                `btn btnPrimary${isActive ? ' linkActive' : ''}`
-              }
-              data-testid="auth-login-link"
-            >
-              Login
-            </NavLink>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `btn btnPrimary${isActive ? ' linkActive' : ''}`
+                }
+                data-testid="auth-login-link"
+              >
+                Login
+              </NavLink>
+              <NavLink
+                to="/register"
+                className={({ isActive }) => `btn${isActive ? ' linkActive' : ''}`}
+                data-testid="auth-register-link"
+              >
+                Register
+              </NavLink>
+            </div>
           )}
         </div>
       </header>
