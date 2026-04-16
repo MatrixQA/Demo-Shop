@@ -40,7 +40,7 @@ export function ForgotPasswordPage() {
     <div className="card" style={{ maxWidth: 560, margin: '0 auto' }}>
       <h1 style={{ marginTop: 0 }}>Forgot password</h1>
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} data-testid="forgot-password-form">
         <div className="field">
           <label htmlFor="fp-email">Email</label>
           <input
@@ -49,23 +49,24 @@ export function ForgotPasswordPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
+            data-testid="forgot-password-email"
           />
         </div>
 
         {error ? (
           <>
             <div style={{ height: 10 }} />
-            <div className="error" role="alert">
+            <div className="error" role="alert" data-testid="forgot-password-error">
               {error}
             </div>
           </>
         ) : null}
 
         <div style={{ height: 16 }} />
-        <button className="btn btnPrimary" type="submit">
+        <button className="btn btnPrimary" type="submit" data-testid="forgot-password-submit">
           Send reset link
         </button>
-        <Link to="/login" className="btn" style={{ marginLeft: 10 }}>
+        <Link to="/login" className="btn" style={{ marginLeft: 10 }} data-testid="forgot-password-back-login">
           Back to login
         </Link>
       </form>
@@ -73,12 +74,16 @@ export function ForgotPasswordPage() {
       {resetUrl ? (
         <>
           <div style={{ height: 18 }} />
-          <div className="card" style={{ background: '#0b1220', color: '#e6edf6' }}>
+          <div
+            className="card"
+            style={{ background: '#0b1220', color: '#e6edf6' }}
+            data-testid="forgot-password-demo-card"
+          >
             <div style={{ fontWeight: 700, marginBottom: 6 }}>Demo password reset</div>
             <div style={{ opacity: 0.9, marginBottom: 10 }}>
               In a real app we’d email you a reset link. For this demo, click:
             </div>
-            <Link to={resetUrl} className="btn btnPrimary">
+            <Link to={resetUrl} className="btn btnPrimary" data-testid="forgot-password-reset-link">
               Reset password
             </Link>
           </div>

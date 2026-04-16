@@ -1,10 +1,11 @@
 import { useEffect, useMemo } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useToast } from '../state/toast/ToastContext.jsx'
 import { verifyEmail } from '../state/auth/authStore.js'
 
 export function VerifyEmailPage() {
   const { pushToast } = useToast()
+  const nav = useNavigate()
   const [params] = useSearchParams()
   const token = params.get('token') || ''
 
@@ -34,9 +35,14 @@ export function VerifyEmailPage() {
       ) : null}
 
       <div style={{ height: 16 }} />
-      <Link to="/login" className="btn btnPrimary">
+      <button
+        type="button"
+        className="btn btnPrimary"
+        onClick={() => nav('/login', { replace: true })}
+        data-testid="verify-go-login"
+      >
         Go to login
-      </Link>
+      </button>
     </div>
   )
 }
