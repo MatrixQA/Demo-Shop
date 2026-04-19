@@ -31,6 +31,17 @@ test.describe('forgot password', () => {
     await expect(fp.demoCard).toBeHidden();
   });
 
+  // Navigation: "Back to login" returns to the login form.
+  test('"Back to login" navigates to /login', async ({ page }) => {
+    const fp = new ForgotPasswordPage(page);
+    await fp.goto();
+
+    await fp.backToLogin.click();
+
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.getByTestId('login-form')).toBeVisible();
+  });
+
   // Demo path: known email shows reset link and navigates to reset-password.
   test('positive: known email shows demo reset link', async ({ page }) => {
     const fp = new ForgotPasswordPage(page);
