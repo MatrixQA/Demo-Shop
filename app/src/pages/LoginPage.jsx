@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../state/auth/AuthContext.jsx'
 import { useToast } from '../state/toast/ToastContext.jsx'
+import { getLastVerifyTokenFor } from '../state/auth/authStore.js'
 
 export function LoginPage() {
   const { login } = useAuth()
@@ -13,6 +14,7 @@ export function LoginPage() {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [remember, setRemember] = useState(true)
   const [error, setError] = useState('')
 
   function onSubmit(e) {
@@ -24,7 +26,7 @@ export function LoginPage() {
       return
     }
 
-    const res = login(username, password)
+    const res = login(username, password, { remember })
     if (!res.ok) {
       setError(res.error)
       pushToast({ kind: 'err', title: 'Login failed', message: res.error })
@@ -33,6 +35,21 @@ export function LoginPage() {
 
     pushToast({ kind: 'ok', title: 'Logged in' })
     nav(from, { replace: true })
+  }
+
+  const showVerifyCta = error === 'Please verify your email first.'
+
+  function onVerifyClick() {
+    const token = getLastVerifyTokenFor(username)
+    if (!token) {
+      pushToast({
+        kind: 'err',
+        title: 'Verification link not found',
+        message: 'Please register again to generate a new verification link.',
+      })
+      return
+    }
+    nav(`/verify-email?token=${encodeURIComponent(token)}`)
   }
 
   return (
@@ -67,12 +84,38 @@ export function LoginPage() {
           />
         </div>
 
+        <div style={{ height: 12 }} />
+
+        <label style={{ display: 'flex', gap: 10, alignItems: 'center', userSelect: 'none' }}>
+          <input
+            type="checkbox"
+            checked={remember}
+            onChange={(e) => setRemember(e.target.checked)}
+            data-testid="login-remember"
+          />
+          <span>Remember me</span>
+        </label>
+
         {error ? (
           <>
             <div style={{ height: 10 }} />
             <div className="error" role="alert" data-testid="login-error">
               {error}
             </div>
+          </>
+        ) : null}
+
+        {showVerifyCta ? (
+          <>
+            <div style={{ height: 12 }} />
+            <button
+              type="button"
+              className="btn"
+              onClick={onVerifyClick}
+              data-testid="login-verify-cta"
+            >
+              Verify email
+            </button>
           </>
         ) : null}
 
