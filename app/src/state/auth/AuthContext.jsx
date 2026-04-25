@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useMemo, useState } from 'react'
 import { authenticate } from './authStore.js'
 
 const AuthContext = createContext(null)
@@ -22,25 +22,27 @@ function loadUser() {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => loadUser())
 
-  useEffect(() => {
-    try {
-      if (user) window.localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
-      else window.localStorage.removeItem(STORAGE_KEY)
-    } catch {
-      // ignore
-    }
-  }, [user])
-
   const value = useMemo(() => {
-    function login(username, password) {
+    function login(username, password, opts = {}) {
       const res = authenticate(username, password)
       if (!res.ok) return res
       setUser(res.user)
+      try {
+        if (opts.remember === false) window.localStorage.removeItem(STORAGE_KEY)
+        else window.localStorage.setItem(STORAGE_KEY, JSON.stringify(res.user))
+      } catch {
+        // ignore
+      }
       return { ok: true }
     }
 
     function logout() {
       setUser(null)
+      try {
+        window.localStorage.removeItem(STORAGE_KEY)
+      } catch {
+        // ignore
+      }
     }
 
     return { user, login, logout }
